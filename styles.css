@@ -1,0 +1,274 @@
+/* design settings block */
+:root {
+    /* colors */
+    --color-primary: rgb(18, 18, 175);
+    --color-secondary: #383f44;
+    --color-background: #97a0a9;
+    --color-text: #212529;
+
+    /* spacing */
+    --space-xs: 4px;
+    --space-sm: 8px;
+    --space-md: 16px;
+    --space-lg: 24px;
+    --space-xl: 32px;
+
+    /* radii */
+    --radius-sm: 4px;
+    --radius-md: 8px;
+    --radius-lg: 16px;
+
+    /* typography */
+    --font-base: "Helvetica Neue", Helvetica;
+    --font-size-base: 16px;
+    --btn-font-size: 1rem;
+
+    /* element sizes */
+    --header-height: 80px;
+    --bottom-nav-height: 56px;
+}
+
+/* global resets and layout */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+body {
+    font-family: var(--font-base);
+    font-size: var(--font-size-base);
+    color: var(--color-text);
+    background: var(--color-background);
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* header */
+#app-header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: var(--header-height);
+    background: var(--color-primary);
+    color: white;
+    display: flex;
+    align-items: center;
+    padding: 0 var(--space-md);
+    z-index: 1000;
+}
+#app-logo {
+    height: 32px;
+    /* responsive logo can scale if needed */
+}
+
+/* main container respects header and bottom nav */
+#app-main {
+    padding-top: var(--header-height);
+    padding-bottom: var(--bottom-nav-height);
+    flex: 1;
+    overflow-y: auto;
+}
+
+/* category filter */
+#category-filter {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+    padding: var(--space-md);
+    overflow-x: auto;
+    background: white;
+    position: sticky;
+    top: var(--margin-top);
+    z-index: 800;
+}
+#category-filter button {
+    padding: var(--space-sm) var(--space-md);
+    border: 1px solid var(--color-secondary);
+    border-radius: var(--radius-md);
+    background: white;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+#category-filter button.active {
+    background: var(--color-primary);
+    color: white;
+    border-color: var(--color-primary);
+}
+
+/* catalog grid */
+#catalog {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+    padding: var(--space-md);
+}
+.card {
+    background: white;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+.card:hover {
+    transform: translateY(-2px);
+}
+.card img {
+    width: 100%;
+    object-fit: cover;
+    aspect-ratio: 4/3;
+}
+.card-body {
+    padding: var(--space-sm);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.card-title {
+    font-weight: bold;
+    margin-bottom: var(--space-xs);
+}
+.card-price {
+    color: var(--color-primary);
+    margin-bottom: var(--space-sm);
+}
+.card button {
+    align-self: start;
+    padding: var(--space-sm) var(--space-md);
+    font-size: var(--btn-font-size);
+    border: none;
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--radius-sm);
+    cursor: pointer;
+}
+
+/* modal */
+#modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000;
+}
+#modal-overlay.hidden {
+    display: none;
+}
+.modal {
+    background: white;
+    border-radius: var(--radius-md);
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow-y: auto;
+    position: relative;
+    padding: var(--space-md);
+}
+.modal-close {
+    position: absolute;
+    top: var(--space-sm);
+    right: var(--space-sm);
+    background: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+/* bottom nav */
+#bottom-nav {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: var(--bottom-nav-height);
+    background: white;
+    display: flex;
+    border-top: 1px solid var(--color-secondary);
+    z-index: 1000;
+}
+.nav-btn {
+    flex: 1;
+    border: none;
+    background: transparent;
+    font-size: var(--btn-font-size);
+    cursor: pointer;
+}
+.nav-btn.active {
+    color: var(--color-primary);
+    font-weight: bold;
+}
+
+/* cart screen */
+#cart-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    padding: var(--space-md);
+}
+.cart-item {
+    display: flex;
+    gap: var(--space-sm);
+    background: white;
+    border-radius: var(--radius-sm);
+    padding: var(--space-sm);
+    align-items: center;
+}
+.cart-item img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: var(--radius-sm);
+}
+.cart-item-info {
+    flex: 1;
+}
+.cart-item-title {
+    font-weight: bold;
+}
+.cart-item-price {
+    color: var(--color-primary);
+}
+.cart-item button {
+    border: none;
+    background: none;
+    color: var(--color-secondary);
+    cursor: pointer;
+}
+
+/* info block and contract */
+#cart-info,
+#cart-contract {
+    padding: var(--space-md);
+}
+#cart-contract {
+    border-top: 1px solid var(--color-secondary);
+}
+#cart-contract label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-sm);
+}
+#cart-contract input[type="checkbox"] {
+    transform: scale(1.2);
+}
+#cart-contract button {
+    width: 100%;
+    padding: var(--space-sm);
+    border: none;
+    background: var(--color-primary);
+    color: white;
+    border-radius: var(--radius-sm);
+    font-size: var(--btn-font-size);
+    cursor: pointer;
+}
+
+/* about screen */
+#about {
+    padding: var(--space-md);
+}

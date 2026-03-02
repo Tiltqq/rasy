@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1" />
+    <title>Rasu Shop</title>
+    <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+    <!-- header -->
+    <header id="app-header">
+        <h1 id="app-title">rasu</h1>
+    </header>
+
+    <!-- main content area -->
+    <main id="app-main">
+        <!-- category filter -->
+        <section id="category-filter"></section>
+
+        <!-- content container (catalog / cart / about) -->
+        <section id="content"></section>
+    </main>
+
+    <!-- modal placeholder -->
+    <div id="modal-overlay" class="hidden">
+        <div id="modal" class="modal">
+            <button id="modal-close" class="modal-close">×</button>
+            <div id="modal-content"></div>
+        </div>
+    </div>
+
+    <!-- bottom navigation -->
+    <nav id="bottom-nav">
+        <button data-screen="catalog" class="nav-btn active">Каталог</button>
+        <button data-screen="cart" class="nav-btn">Корзина</button>
+        <button data-screen="about" class="nav-btn">О проекте</button>
+    </nav>
+
+    <script src="app.js"></script>
+</body>
+</html>
