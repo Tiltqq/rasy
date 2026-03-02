@@ -94,7 +94,7 @@ body {
 #category-filter button.active {
     background: var(--color-primary);
     color: white;
-    border-color: var(--color-primary);
+    border: none;
 }
 
 /* catalog grid */

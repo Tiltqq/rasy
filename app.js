@@ -17,17 +17,18 @@ if (tg) {
 
 // data structures
 const categories = [
+    { id: 'all', name: 'Все' },
     { id: 'design', name: 'Дизайн' },
     { id: 'production', name: 'Производство' },
     { id: 'documents', name: 'Документы' },
 ];
 const products = [
-    { id: 1, title: 'Товар 1', category: 'design', price: '100', img: 'https://via.placeholder.com/400x300?text=Товар+1', desc: 'Описание товара 1' },
-    { id: 2, title: 'Товар 2', category: 'design', price: '200', img: 'https://via.placeholder.com/400x300?text=Товар+2', desc: 'Описание товара 2' },
-    { id: 3, title: 'Товар 3', category: 'production', price: '300', img: 'https://via.placeholder.com/400x300?text=Товар+3', desc: 'Описание товара 3' },
-    { id: 4, title: 'Товар 4', category: 'production', price: '400', img: 'https://via.placeholder.com/400x300?text=Товар+4', desc: 'Описание товара 4' },
-    { id: 5, title: 'Товар 5', category: 'documents', price: '500', img: 'https://via.placeholder.com/400x300?text=Товар+5', desc: 'Описание товара 5' },
-    { id: 6, title: 'Товар 6', category: 'documents', price: '600', img: 'https://via.placeholder.com/400x300?text=Товар+6', desc: 'Описание товара 6' },
+    { id: 1, title: 'Товар 1', categories: ['all','design'], price: '100', img: 'https://via.placeholder.com/400x300?text=Товар+1', desc: 'Описание товара 1' },
+    { id: 2, title: 'Товар 2', categories: ['all','design'], price: '200', img: 'https://via.placeholder.com/400x300?text=Товар+2', desc: 'Описание товара 2' },
+    { id: 3, title: 'Товар 3', categories: ['all','production'], price: '300', img: 'https://via.placeholder.com/400x300?text=Товар+3', desc: 'Описание товара 3' },
+    { id: 4, title: 'Товар 4', categories: ['all','production'], price: '400', img: 'https://via.placeholder.com/400x300?text=Товар+4', desc: 'Описание товара 4' },
+    { id: 5, title: 'Товар 5', categories: ['all','documents'], price: '500', img: 'https://via.placeholder.com/400x300?text=Товар+5', desc: 'Описание товара 5' },
+    { id: 6, title: 'Товар 6', categories: ['all','documents'], price: '600', img: 'https://via.placeholder.com/400x300?text=Товар+6', desc: 'Описание товара 6' },
 ];
 
 let state = {
@@ -51,19 +52,7 @@ function renderCategoryFilter() {
     const container = $('#category-filter');
     container.innerHTML = '';
 
-    // Add "All" button
-    const allBtn = document.createElement('button');
-    allBtn.textContent = 'Все';
-    allBtn.dataset.id = 'all';
-    if (!state.activeCategory) allBtn.classList.add('active');
-    allBtn.addEventListener('click', () => {
-        state.activeCategory = null;
-        renderCatalog();
-        renderCategoryFilter();
-    });
-    container.appendChild(allBtn);
-
-    // Add category buttons
+    // add category buttons (including "all" itself)
     categories.forEach(cat => {
         const btn = document.createElement('button');
         btn.textContent = cat.name;
@@ -84,7 +73,9 @@ function renderCatalog() {
     const grid = document.createElement('div');
     grid.id = 'catalog';
 
-    const filtered = state.activeCategory ? products.filter(p => p.category === state.activeCategory) : products;
+    const filtered = state.activeCategory === 'all'
+        ? products
+        : products.filter(p => p.categories && p.categories.includes(state.activeCategory));
     filtered.forEach(p => {
         const card = document.createElement('div');
         card.className = 'card';
@@ -205,5 +196,5 @@ on(document, 'click', '#bottom-nav .nav-btn', e => {
 });
 
 // initialization
-if (!state.activeCategory) state.activeCategory = categories[0].id;
+if (!state.activeCategory) state.activeCategory = 'all';
 switchScreen(state.screen);
