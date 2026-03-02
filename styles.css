@@ -19,7 +19,7 @@
     --radius-lg: 16px;
 
     /* typography */
-    --font-base: Roboto;
+    --font-base: system-ui, -apple-system, sans-serif;
     --font-size-base: 16px;
     --btn-font-size: 1rem;
 
