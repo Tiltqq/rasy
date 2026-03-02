@@ -23,10 +23,10 @@ const categories = [
     { id: 'documents', name: 'Документы' },
 ];
 const products = [
-    { id: 1, title: 'Товар 1', categories: ['all','design'], price: '100', img: 'https://via.placeholder.com/400x300?text=Товар+1', desc: 'Описание товара 1' },
-    { id: 2, title: 'Товар 2', categories: ['all','design'], price: '200', img: 'https://via.placeholder.com/400x300?text=Товар+2', desc: 'Описание товара 2' },
-    { id: 3, title: 'Товар 3', categories: ['all','production'], price: '300', img: 'https://via.placeholder.com/400x300?text=Товар+3', desc: 'Описание товара 3' },
-    { id: 4, title: 'Товар 4', categories: ['all','production'], price: '400', img: 'https://via.placeholder.com/400x300?text=Товар+4', desc: 'Описание товара 4' },
+    { id: 1, title: 'Экспресс-дизайн', categories: ['all','design'], price: '100', img: 'https://via.placeholder.com/400x300?text=Товар+1', desc: 'Описание товара 1' },
+    { id: 2, title: 'Отрисовка логотипа', categories: ['all','design'], price: '200', img: 'https://via.placeholder.com/400x300?text=Товар+2', desc: 'Описание товара 2' },
+    { id: 3, title: 'Вывеска', categories: ['all','production'], price: '300', img: 'https://lh3.google.com/u/0/d/1ySGtGjFBfB6hf1E6g5-k0GlepFfKs_vc=w1920-h966-iv1?auditContext=prefetch', desc: 'Описание товара 3' },
+    { id: 4, title: 'Короб', categories: ['all','production'], price: '400', img: 'https://via.placeholder.com/400x300?text=Товар+4', desc: 'Описание товара 4' },
     { id: 5, title: 'Товар 5', categories: ['all','documents'], price: '500', img: 'https://via.placeholder.com/400x300?text=Товар+5', desc: 'Описание товара 5' },
     { id: 6, title: 'Товар 6', categories: ['all','documents'], price: '600', img: 'https://via.placeholder.com/400x300?text=Товар+6', desc: 'Описание товара 6' },
 ];
@@ -82,17 +82,16 @@ function renderCatalog() {
         card.innerHTML = `
             <img src="${p.img}" alt="${p.title}" />
             <div class="card-body">
-                <div>
-                    <div class="card-title">${p.title}</div>
-                    <div class="card-price">${p.price} ₽</div>
+                <div class="card-header">
+                    <div>
+                        <div class="card-title">${p.title}</div>
+                        <div class="card-price">${p.price} ₽</div>
+                    </div>
+                    <button data-id="${p.id}" class="details-btn"></button>
                 </div>
-                <button data-id="${p.id}" class="details-btn">Подробнее</button>
             </div>
         `;
         card.querySelector('.details-btn').addEventListener('click', () => openModal(p));
-        card.addEventListener('click', e => {
-            if (!e.target.closest('button')) openModal(p);
-        });
         grid.appendChild(card);
     });
 
