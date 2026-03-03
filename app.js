@@ -47,77 +47,25 @@ function on(parent, event, selector, handler) {
     });
 }
 
-// --- cloud storage helpers (Telegram WebApp.CloudStorage) ---
-// the WebApp API has changed over time; some versions expose `tg.cloud` with
-// promise-based `get`/`set`, others provide `tg.CloudStorage` with callback
-// methods. support both gracefully.
-async function loadCart() {
-    if (!tg) return;
-
-    // prefer callback API since the example provided by user used it
-    if (tg.CloudStorage && typeof tg.CloudStorage.getItem === 'function') {
-        console.log('loadCart: using CloudStorage.getItem');
-        return new Promise(resolve => {
-            try {
-                tg.CloudStorage.getItem('cart', (err, value) => {
-                    if (err) {
-                        console.error('CloudStorage.getItem error:', err);
-                    } else if (value) {
-                        try {
-                            state.cart = JSON.parse(value) || [];
-                        } catch (e) {
-                            console.error('Error parsing cart from cloud:', e);
-                        }
-                    }
-                    resolve();
-                });
-            } catch (e) {
-                console.error('CloudStorage.getItem threw:', e);
-                resolve();
-            }
-        });
-    }
-
-    // fallback to promise-style interface
-    if (tg.cloud && typeof tg.cloud.get === 'function') {
-        console.log('loadCart: using cloud.get');
-        try {
-            const result = await tg.cloud.get('cart');
-            if (result && typeof result.value === 'string') {
-                state.cart = JSON.parse(result.value) || [];
-            }
-        } catch (err) {
-            console.error('Failed to load cart from cloud:', err);
+// --- cart persistence helpers (localStorage) ---
+// use browser localStorage so that the cart survives page reloads and
+// closing the mini‑app. this works regardless of Telegram-specific APIs.
+function loadCart() {
+    try {
+        const raw = localStorage.getItem('cart');
+        if (raw) {
+            state.cart = JSON.parse(raw) || [];
         }
-        return;
+    } catch (e) {
+        console.error('Ошибка чтения корзины из localStorage:', e);
     }
 }
 
 function saveCart() {
-    if (!tg) return;
-    const payload = JSON.stringify(state.cart);
-
-    // callback-style first
-    if (tg.CloudStorage && typeof tg.CloudStorage.setItem === 'function') {
-        console.log('saveCart: using CloudStorage.setItem');
-        try {
-            tg.CloudStorage.setItem('cart', payload, err => {
-                if (err) console.error('CloudStorage save error:', err);
-            });
-        } catch (e) {
-            console.error('CloudStorage.setItem exception:', e);
-        }
-        return;
-    }
-
-    // promise-style
-    if (tg.cloud && typeof tg.cloud.set === 'function') {
-        console.log('saveCart: using cloud.set');
-        try {
-            tg.cloud.set('cart', payload).catch(err => console.error('Failed to save cart to cloud:', err));
-        } catch (err) {
-            console.error('Error saving cart via tg.cloud:', err);
-        }
+    try {
+        localStorage.setItem('cart', JSON.stringify(state.cart));
+    } catch (e) {
+        console.error('Ошибка записи корзины в localStorage:', e);
     }
 }
 
@@ -284,14 +232,11 @@ on(document, 'click', '#bottom-nav .nav-btn', e => {
 });
 
 // initialization
-(async () => {
-    // try to restore cart before rendering anything
-    await loadCart();
+(() => {
+    // restore cart immediately (localStorage API is synchronous)
+    loadCart();
     if (!state.activeCategory) state.activeCategory = 'all';
     switchScreen(state.screen);
-    // make sure cart is saved again on unload in case WebApp terminates quickly
+    // keep cart saved when user leaves
     window.addEventListener('beforeunload', saveCart);
-    if (tg && typeof tg.onEvent === 'function') {
-        tg.onEvent('popupClosing', saveCart); // hypothetical event
-    }
 })();
