@@ -47,6 +47,16 @@ function on(parent, event, selector, handler) {
     });
 }
 
+// calculate cart total including delivery
+function calculateTotal() {
+    const itemsTotal = state.cart.reduce((sum, item) => {
+        const price = parseFloat(item.price) || 0;
+        return sum + price;
+    }, 0);
+    const delivery = state.deliveryPrice || 0;
+    return itemsTotal + delivery;
+}
+
 // --- cart persistence helpers (localStorage) ---
 // use browser localStorage so that the cart survives page reloads and
 // closing the mini‑app. this works regardless of Telegram-specific APIs.
@@ -169,10 +179,42 @@ function renderCart() {
     });
 
     content.appendChild(list);
+
+    // info message (at the top when cart is empty)
     const info = document.createElement('div');
     info.id = 'cart-info';
-    info.textContent = 'Полезная информация о заказе будет здесь.';
-    content.appendChild(info);
+    info.style.textAlign = 'center';
+    if (state.cart.length === 0) {
+        info.textContent = 'Добавьте услуги в корзину, чтобы оформить заказ.';
+        content.appendChild(info);
+        // do not show delivery section if cart is empty
+        return;
+    } else {
+        // ensure it's present but empty for potential later updates
+        info.textContent = '';
+        content.appendChild(info);
+    }
+
+    // delivery options
+    const deliverySection = document.createElement('div');
+    deliverySection.id = 'cart-delivery';
+    deliverySection.innerHTML = `
+        <p>Выберите доставку:</p>
+        <div id="delivery-options">
+            <label><input type="radio" name="delivery" value="100"><span class="delivery-region">Москва</span><br><span class="delivery-price">100 ₽</span></label>
+            <label><input type="radio" name="delivery" value="200"><span class="delivery-region">МО</span><br><span class="delivery-price">200 ₽</span></label>
+            <label><input type="radio" name="delivery" value="300"><span class="delivery-region">Другие регионы</span><br><span class="delivery-price">300 ₽</span></label>
+        </div>
+    `;
+    content.appendChild(deliverySection);
+
+    // total display
+    const totalDiv = document.createElement('div');
+    totalDiv.id = 'cart-total';
+    totalDiv.style.margin = 'var(--space-md) 0';
+    totalDiv.style.fontWeight = 'bold';
+    totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
+    content.appendChild(totalDiv);
     const contract = document.createElement('div');
     contract.id = 'cart-contract';
     contract.innerHTML = `
@@ -187,6 +229,45 @@ function renderCart() {
     agreeCheckbox.addEventListener('change', () => {
         payBtn.disabled = !agreeCheckbox.checked;
     });
+
+    // delivery change handling
+    const optionsContainer = deliverySection.querySelector('#delivery-options');
+    optionsContainer.addEventListener('change', e => {
+        if (e.target.name === 'delivery') {
+            state.deliveryPrice = parseFloat(e.target.value) || 0;
+            totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
+            saveCart();
+            // toggle selected class on labels
+            optionsContainer.querySelectorAll('label').forEach(label => {
+                const input = label.querySelector('input[name="delivery"]');
+                if (input && input.checked) {
+                    label.classList.add('selected');
+                } else {
+                    label.classList.remove('selected');
+                }
+            });
+        }
+    });
+
+    // preselect if saved
+    if (state.deliveryPrice) {
+        const inp = optionsContainer.querySelector(`input[value="${state.deliveryPrice}"]`);
+        if (inp) {
+            inp.checked = true;
+            inp.closest('label').classList.add('selected');
+        }
+        totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
+    }
+
+    // preselect if saved
+    if (state.deliveryPrice) {
+        const inp = deliverySection.querySelector(`input[value="${state.deliveryPrice}"]`);
+        if (inp) {
+            inp.checked = true;
+            inp.closest('label').classList.add('selected');
+        }
+        totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
+    }
 }
 
 function renderAbout() {
