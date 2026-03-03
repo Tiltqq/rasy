@@ -190,11 +190,30 @@ body {
 .modal {
     background: white;
     border-radius: var(--radius-md);
+    /* make sure the modal never exceeds viewport dimensions */
     max-width: 90vw;
+    width: 90vw;
     max-height: 90vh;
     overflow-y: auto;
     position: relative;
     padding: var(--space-md);
+}
+/* ensure images inside modal scale down on narrow screens */
+.modal img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+    margin: 0 auto var(--space-md);
+}
+
+/* even tighter constraints for small phones (e.g. iPhone 15 ~ 390px width) */
+@media (max-width: 460px) {
+    .modal {
+        width: 95vw;
+        max-height: 85vh;
+        padding: var(--space-sm);
+        font-size: 0.9rem;
+    }
 }
 .modal-close {
     position: absolute;
