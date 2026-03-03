@@ -174,13 +174,19 @@ function renderAbout() {
 function switchScreen(screen) {
     state.screen = screen;
     renderBottomNav();
+    // only show filters on catalog screen
+    const filterContainer = $('#category-filter');
     if (screen === 'catalog') {
         renderCategoryFilter();
         renderCatalog();
-    } else if (screen === 'cart') {
-        renderCart();
-    } else if (screen === 'about') {
-        renderAbout();
+    } else {
+        // clear filters when leaving catalog
+        if (filterContainer) filterContainer.innerHTML = '';
+        if (screen === 'cart') {
+            renderCart();
+        } else if (screen === 'about') {
+            renderAbout();
+        }
     }
 }
 
