@@ -197,6 +197,9 @@ body {
     overflow-y: auto;
     position: relative;
     padding: var(--space-md);
+    /* desktop cap: don’t let it grow too large even if the viewport is wide */
+    max-width: 600px;
+    max-height: 80vh;
 }
 /* ensure images inside modal scale down on narrow screens */
 .modal img {
