@@ -154,9 +154,16 @@ function renderCart() {
     contract.id = 'cart-contract';
     contract.innerHTML = `
         <label><input type="checkbox" id="agree"> Я согласен</label>
-        <button id="pay-button">Оплатить заказ</button>
+        <button id="pay-button" disabled>Оплатить заказ</button>
     `;
     content.appendChild(contract);
+
+    // disable/enable pay button based on agreement checkbox
+    const payBtn = contract.querySelector('#pay-button');
+    const agreeCheckbox = contract.querySelector('#agree');
+    agreeCheckbox.addEventListener('change', () => {
+        payBtn.disabled = !agreeCheckbox.checked;
+    });
 }
 
 function renderAbout() {

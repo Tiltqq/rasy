@@ -19,7 +19,7 @@
     --radius-lg: 16px;
 
     /* typography */
-    --font-base: system-ui, -apple-system, sans-serif;
+    --font-base: 'Nunito Sans', sans-serif;
     --font-size-base: 16px;
     --btn-font-size: 1rem;
 
@@ -35,7 +35,8 @@
     padding: 0;
 }
 body {
-    font-family: var(--font-base);
+    /* global Roboto font */
+    font-family: "Roboto", sans-serif;
     font-size: var(--font-size-base);
     color: var(--color-text);
     background: var(--color-background);
@@ -97,6 +98,9 @@ body {
     background: white;
     cursor: pointer;
     flex-shrink: 0;
+    /* inherit global Roboto font */
+    font-family: inherit;
+    font-weight: 400;
 }
 #category-filter button.active {
     background: var(--color-primary);
@@ -147,6 +151,7 @@ body {
 .card-price {
     color: var(--color-primary);
     margin-bottom: var(--space-sm);
+    font-weight: bold;
 }
 .details-btn {
     width: 32px;
@@ -288,6 +293,11 @@ body {
     border-radius: var(--radius-sm);
     font-size: var(--btn-font-size);
     cursor: pointer;
+}
+#cart-contract button:disabled {
+    background: var(--color-secondary);
+    color: #888;
+    cursor: not-allowed;
 }
 
 /* about screen */
