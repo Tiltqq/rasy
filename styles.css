@@ -224,9 +224,14 @@ body {
     background: transparent;
     font-size: var(--btn-font-size);
     cursor: pointer;
+    color: #d2d2d2; /* default grey */
+    transition: color 0.15s;
+}
+.nav-btn.active,
+.nav-btn:active {
+    color: #000; /* black when active or pressed */
 }
 .nav-btn.active {
-    color: var(--color-primary);
     font-weight: bold;
 }
 
