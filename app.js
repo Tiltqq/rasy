@@ -47,6 +47,30 @@ function on(parent, event, selector, handler) {
     });
 }
 
+// --- cloud storage helpers (Telegram WebApp.CloudStorage) ---
+async function loadCart() {
+    if (!tg || !tg.cloud) return;
+    try {
+        const result = await tg.cloud.get('cart');
+        if (result && typeof result.value === 'string') {
+            state.cart = JSON.parse(result.value) || [];
+        }
+    } catch (err) {
+        console.error('Failed to load cart from cloud:', err);
+    }
+}
+
+function saveCart() {
+    if (!tg || !tg.cloud) return;
+    try {
+        const payload = JSON.stringify(state.cart);
+        tg.cloud.set('cart', payload)
+            .catch(err => console.error('Failed to save cart to cloud:', err));
+    } catch (err) {
+        console.error('Error serializing cart:', err);
+    }
+}
+
 // render functions
 function renderCategoryFilter() {
     const container = $('#category-filter');
@@ -140,6 +164,7 @@ function renderCart() {
         `;
         div.querySelector('.remove-btn').addEventListener('click', () => {
             state.cart = state.cart.filter(i => i.id !== item.id);
+            saveCart();
             renderCart();
         });
         list.appendChild(div);
@@ -200,6 +225,7 @@ on(document, 'click', '#modal button#add-to-cart', e => {
     const product = products.find(p => p.id === id);
     if (product) {
         state.cart.push(product);
+        saveCart();
         closeModal();
     }
 });
@@ -208,5 +234,9 @@ on(document, 'click', '#bottom-nav .nav-btn', e => {
 });
 
 // initialization
-if (!state.activeCategory) state.activeCategory = 'all';
-switchScreen(state.screen);
+(async () => {
+    // try to restore cart before rendering anything
+    await loadCart();
+    if (!state.activeCategory) state.activeCategory = 'all';
+    switchScreen(state.screen);
+})();
