@@ -215,13 +215,23 @@ function renderCart() {
     totalDiv.style.fontWeight = 'bold';
     totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
     content.appendChild(totalDiv);
-    const contract = document.createElement('div');
-    contract.id = 'cart-contract';
-    contract.innerHTML = `
-        <label><input type="checkbox" id="agree"> Я согласен</label>
-        <button id="pay-button" disabled>Оплатить заказ</button>
-    `;
-    content.appendChild(contract);
+    
+    // === Блок "Договор" с правильными отступами ===
+const contractContainer = document.createElement('div');
+contractContainer.id = 'cart-contract';
+contractContainer.style.padding = '0 25%'; // ← одинаковые отступы
+
+const contract = document.createElement('div');
+contract.innerHTML = `
+    <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+        <input type="checkbox" id="agree"> Я согласен
+    </label>
+    <button id="pay-button" disabled style="width:100%;padding:12px;background:#1212af;color:white;border:none;border-radius:8px;cursor:pointer;">
+        Оплатить заказ
+    </button>
+`;
+contractContainer.appendChild(contract);
+content.appendChild(contractContainer);
 
     // disable/enable pay button based on agreement checkbox
     const payBtn = contract.querySelector('#pay-button');

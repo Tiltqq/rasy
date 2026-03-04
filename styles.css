@@ -3,6 +3,7 @@
     /* colors */
     --color-primary: rgb(18, 18, 175);
     --color-secondary: #E0E0E0;
+    --color-notactive: #636363;
     --color-background: #F5F6FA;
     --color-text: #202224;
 
@@ -26,6 +27,9 @@
     /* element sizes */
     --header-height: 80px;
     --bottom-nav-height: 56px;
+
+    --page-padding: 16px;        /* для малых экранов */
+    --max-content-width: 600px;  /* макс. ширина контента */
 }
 
 /* global resets and layout */
@@ -33,6 +37,13 @@
     box-sizing: border-box;
     margin: 0;
     padding: 0;
+}
+
+.content-block {
+    padding: 0 var(--page-padding);
+    max-width: var(--max-content-width);
+    margin: 0 auto;
+    width: 100%;
 }
 body {
     /* global Roboto font */
@@ -256,13 +267,34 @@ body {
 .nav-btn.active {
     font-weight: bold;
 }
+/* стили для иконок в нижней навигации */
+.nav-btn .nav-icon {
+    fill: var(--color-notactive); /* серый по умолчанию */
+}
+
+/* активная кнопка — синяя иконка */
+.nav-btn.active .nav-icon,
+.nav-btn:active .nav-icon {
+    fill: var(--color-text); /* твой синий цвет */
+}
+
 
 /* cart screen */
+#cart-list,
+#cart-delivery,
+#cart-total,
+#cart-info,
+#cart-contract,
+#cart-contract button {
+    padding-left: 25%;
+    padding-right: 25%;
+}
+
 #cart-list {
     display: flex;
     flex-direction: column;
     gap: var(--space-md);
-    padding: var(--space-md);
+    
 }
 
 /* delivery options styling */
@@ -275,21 +307,23 @@ body {
     display: flex;
     gap: var(--space-sm);
     flex-wrap: wrap;
+    padding: var(--page-padding);
+    width: 100%; /* ← гарантируем, что занимает всю ширину */
 }
 #cart-delivery label {
     display: inline-flex;
-    flex: 1 1 60px;
+    flex: 1 1 0px;
     flex-direction: column;
     align-items: center;
     justify-content: center;
     padding: var(--space-sm) var(--space-md);
-    border: 1px solid #000;
+    border: 0px solid #ffffff;
     border-radius: var(--radius-md);
     background: white;
     cursor: pointer;
     text-align: center;
-    min-width: 60px;
-    max-width: 120px;
+    min-width: 140px;
+    max-width: 2000px;
 }
 #cart-delivery label.selected {
     background: rgb(18, 18, 175);
@@ -301,6 +335,10 @@ body {
 }
 #cart-delivery label .delivery-price {
     color: #555;
+    font-family: Roboto, sans-serif;
+}
+#cart-delivery label.selected .delivery-price {
+    color: #ffffff;
     font-family: Roboto, sans-serif;
 }
 /* hide actual radio buttons entirely */
@@ -316,10 +354,30 @@ body {
     align-items: center;
 }
 .cart-item img {
-    width: 60px;
-    height: 60px;
+    width: 130px;
+    height: 97.5px;
     object-fit: cover;
     border-radius: var(--radius-sm);
+}
+.remove-btn {
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    background: white;
+    color: rgb(18, 18, 175);
+    font-size: 20px;
+    border: 1.5px solid rgb(18, 18, 175);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    margin-left: auto; /* ← отодвигает крестик вправо (если нужно) */
+}
+
+.remove-btn:hover {
+    color: rgb(18, 18, 175);
+    transform: scale(1.1);
 }
 .cart-item-info {
     flex: 1;
