@@ -176,7 +176,8 @@ body {
     display: flex;
     align-items: bottom;
     justify-content: bottom;
-    flex-shrink: 0;
+    margin-top: auto;
+    margin-bottom: 10px;
     transition: background-color 0.2s, transform 0.1s;
 }
 .details-btn:hover,
@@ -237,6 +238,23 @@ body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+/* product card button */
+#add-to-cart {
+    background-color: rgb(18, 18, 175);
+    color: white;
+    border: none;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: 8px;
+    font-family: "Roboto", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#add-to-cart:hover,
+#add-to-cart:active {
+    background-color: rgb(65, 65, 230);
 }
 
 /* bottom nav */
