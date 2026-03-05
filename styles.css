@@ -20,13 +20,13 @@
     --radius-lg: 16px;
 
     /* typography */
-    --font-base: Roboto, sans-serif;
+    --font-base: 'Roboto', sans-serif;
     --font-size-base: 16px;
     --btn-font-size: 1rem;
 
     /* element sizes */
     --header-height: 80px;
-    --bottom-nav-height: 72px;
+    --bottom-nav-height: 56px;
 
     --page-padding: clamp(8px, 3vw, 24px);      /* для малых экранов */
     --max-content-width: 2000px;  /* макс. ширина контента */
@@ -122,9 +122,9 @@ body {
 /* catalog grid */
 #catalog {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
-    gap: var(--space-sm);
-    padding: var(--space-sm);
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: var(--space-md);
+    padding: var(--space-md);
 }
 .card {
     background: white;
@@ -132,8 +132,6 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
-    min-width: 140px;
-    height: auto;
 }
 .card img {
     width: 100%;
@@ -153,25 +151,22 @@ body {
     align-items: flex-start;
     justify-content: space-between;
     width: 100%;
-    flex-wrap: wrap;
 }
 .card-title {
     font-weight: bold;
     margin-bottom: var(--space-xs);
-    white-space: normal;
-    overflow: visible;
-    text-overflow: clip;
-    font-size: 16px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .card-price {
     color: var(--color-primary);
     margin-bottom: var(--space-sm);
     font-weight: bold;
-    font-size: 16px;
 }
 .details-btn {
-    width: 24px;
-    height: 24px;
+    width: 32px;
+    height: 32px;
     padding: 0;
     border: none;
     background: var(--color-primary);
@@ -179,14 +174,10 @@ body {
     border-radius: 20%;
     cursor: pointer;
     display: flex;
-    align-items: center;
-    justify-content: center;
+    align-items: bottom;
+    justify-content: bottom;
     flex-shrink: 0;
     transition: background-color 0.2s, transform 0.1s;
-    position: static;
-    margin-top: auto;
-    margin-bottom: 3px;
-    align-self: flex-start;
 }
 .details-btn:hover,
 .details-btn:active {
@@ -246,23 +237,6 @@ body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-}
-
-/* product card button */
-#add-to-cart {
-    background-color: var(--color-primary);
-    color: white;
-    border: none;
-    padding: var(--space-sm) var(--space-md);
-    border-radius: var(--radius-md);
-    font-family: "Roboto", sans-serif;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-#add-to-cart:hover,
-#add-to-cart:active {
-    background-color: rgb(65, 65, 230);
 }
 
 /* bottom nav */
