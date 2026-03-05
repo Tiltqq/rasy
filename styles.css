@@ -179,12 +179,13 @@ body {
     border-radius: 20%;
     cursor: pointer;
     display: flex;
-    align-items: bottom;
-    justify-content: bottom;
+    align-items: center;
+    justify-content: center;
     flex-shrink: 0;
     transition: background-color 0.2s, transform 0.1s;
-    position: sticky;
-    margin-top: anchor-size 1px;
+    position: static;
+    margin-top: auto;
+    margin-bottom: 3px;
     align-self: flex-start;
 }
 .details-btn:hover,
