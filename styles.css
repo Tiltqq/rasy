@@ -153,22 +153,25 @@ body {
     align-items: flex-start;
     justify-content: space-between;
     width: 100%;
+    flex-wrap: wrap;
 }
 .card-title {
     font-weight: bold;
     margin-bottom: var(--space-xs);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: clip;
+    font-size: 16px;
 }
 .card-price {
     color: var(--color-primary);
     margin-bottom: var(--space-sm);
     font-weight: bold;
+    font-size: 16px;
 }
 .details-btn {
-    width: 32px;
-    height: 32px;
+    width: 24px;
+    height: 24px;
     padding: 0;
     border: none;
     background: var(--color-primary);
@@ -180,6 +183,9 @@ body {
     justify-content: bottom;
     flex-shrink: 0;
     transition: background-color 0.2s, transform 0.1s;
+    position: sticky;
+    top: 0;
+    align-self: flex-start;
 }
 .details-btn:hover,
 .details-btn:active {
