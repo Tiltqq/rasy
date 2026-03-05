@@ -233,7 +233,7 @@ contract.innerHTML = `
     <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
         <input type="checkbox" id="agree"> Я согласен
     </label>
-    <button id="pay-button" disabled style="width:100%;padding:12px;background:#1212af;color:white;border:none;border-radius:8px;cursor:pointer;">
+    <button id="pay-button" disabled style="width:100%;padding:12px;background:#1212af;color:white;border:none;border-radius:8px;cursor:pointer;font-family:'Roboto',sans-serif;">
         Оплатить заказ
     </button>
 `;

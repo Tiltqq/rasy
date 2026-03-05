@@ -20,7 +20,7 @@
     --radius-lg: 16px;
 
     /* typography */
-    --font-base: 'Nunito Sans', sans-serif;
+    --font-base: Roboto, sans-serif;
     --font-size-base: 16px;
     --btn-font-size: 1rem;
 
@@ -237,6 +237,23 @@ body {
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
+}
+
+/* product card button */
+#add-to-cart {
+    background-color: var(--color-primary);
+    color: white;
+    border: none;
+    padding: var(--space-sm) var(--space-md);
+    border-radius: var(--radius-md);
+    font-family: "Roboto", sans-serif;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+#add-to-cart:hover,
+#add-to-cart:active {
+    background-color: rgb(65, 65, 230);
 }
 
 /* bottom nav */
