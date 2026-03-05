@@ -3,11 +3,17 @@ const tg = window.Telegram ? window.Telegram.WebApp : null;
 if (tg) {
     tg.expand();
     tg.MainButton.hide();
+
+    // Получаем пользователя из Telegram
+    const user = tg.initDataUnsafe.user;
+    if (user) {
+        state.user = user; // сохраняем в состояние
+    }
+
     // apply theme parameters to css variables if available
     const params = tg.themeParams;
     if (params) {
         const root = document.documentElement;
-        // map some common colors
         if (params.bg_color) root.style.setProperty('--color-background', params.bg_color);
         if (params.text_color) root.style.setProperty('--color-text', params.text_color);
         if (params.button_color) root.style.setProperty('--color-primary', params.button_color);
@@ -22,25 +28,28 @@ const categories = [
     { id: 'production', name: 'Производство' },
     { id: 'documents', name: 'Документы' },
 ];
+
 const products = [
     { id: 1, title: 'Экспресс-дизайн', categories: ['all','design'], price: '100', img: 'https://via.placeholder.com/400x300?text=Товар+1', desc: 'Описание товара 1' },
     { id: 2, title: 'Отрисовка логотипа', categories: ['all','design'], price: '200', img: 'https://via.placeholder.com/400x300?text=Товар+2', desc: 'Описание товара 2' },
-    { id: 3, title: 'Вывеска', categories: ['all','production'], price: '300', img: 'https://i.postimg.cc/xdG8xfDF/Signboard.jpghttps://lh3.google.com/u/0/d/1ySGtGjFBfB6hf1E6g5-k0GlepFfKs_vc=w1920-h966-iv1?auditContext=prefetch', desc: 'Описание товара 3' },
+    { id: 3, title: 'Вывеска', categories: ['all','production'], price: '300', img: 'https://i.postimg.cc/xdG8xfDF/Signboard.jpg', desc: 'Описание товара 3' },
     { id: 4, title: 'Короб', categories: ['all','production'], price: '400', img: 'https://via.placeholder.com/400x300?text=Товар+4', desc: 'Описание товара 4' },
     { id: 5, title: 'Товар 5', categories: ['all','documents'], price: '500', img: 'https://via.placeholder.com/400x300?text=Товар+5', desc: 'Описание товара 5' },
     { id: 6, title: 'Товар 6', categories: ['all','documents'], price: '600', img: 'https://via.placeholder.com/400x300?text=Товар+6', desc: 'Описание товара 6' },
 ];
 
 let state = {
-    screen: 'catalog', // catalog, cart, about
+    screen: 'catalog', // catalog, cart, about, account
     activeCategory: null,
     cart: [],
+    user: null, // ← будем хранить данные пользователя из Telegram
 };
 
 // helpers
 function $(selector) {
     return document.querySelector(selector);
 }
+
 function on(parent, event, selector, handler) {
     parent.addEventListener(event, e => {
         if (e.target.closest(selector)) handler(e);
@@ -66,8 +75,6 @@ function calculateTotal() {
 }
 
 // --- cart persistence helpers (localStorage) ---
-// use browser localStorage so that the cart survives page reloads and
-// closing the mini‑app. this works regardless of Telegram-specific APIs.
 function loadCart() {
     try {
         const raw = localStorage.getItem('cart');
@@ -92,7 +99,6 @@ function renderCategoryFilter() {
     const container = $('#category-filter');
     container.innerHTML = '';
 
-    // add category buttons (including "all" itself)
     categories.forEach(cat => {
         const btn = document.createElement('button');
         btn.textContent = cat.name;
@@ -116,6 +122,7 @@ function renderCatalog() {
     const filtered = state.activeCategory === 'all'
         ? products
         : products.filter(p => p.categories && p.categories.includes(state.activeCategory));
+
     filtered.forEach(p => {
         const card = document.createElement('div');
         card.className = 'card';
@@ -195,10 +202,8 @@ function renderCart() {
     if (state.cart.length === 0) {
         info.textContent = 'Добавьте услуги в корзину, чтобы оформить заказ.';
         content.appendChild(info);
-        // do not show delivery section if cart is empty
         return;
     } else {
-        // ensure it's present but empty for potential later updates
         info.textContent = '';
         content.appendChild(info);
     }
@@ -222,23 +227,22 @@ function renderCart() {
     totalDiv.style.fontWeight = 'bold';
     totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
     content.appendChild(createBlock(totalDiv));
-    
-    // === Блок "Договор" с правильными отступами ===
-const contractContainer = document.createElement('div');
-contractContainer.id = 'cart-contract';
 
+    // === Блок "Договор" ===
+    const contractContainer = document.createElement('div');
+    contractContainer.id = 'cart-contract';
 
-const contract = document.createElement('div');
-contract.innerHTML = `
-    <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
-        <input type="checkbox" id="agree"> Я согласен
-    </label>
-    <button id="pay-button" disabled>
-        Оплатить заказ
-    </button>
-`;
-contractContainer.appendChild(contract);
-content.appendChild(createBlock(contractContainer));
+    const contract = document.createElement('div');
+    contract.innerHTML = `
+        <label style="display:flex;align-items:center;gap:8px;margin-bottom:8px">
+            <input type="checkbox" id="agree"> Я согласен
+        </label>
+        <button id="pay-button" disabled>
+            Оплатить заказ
+        </button>
+    `;
+    contractContainer.appendChild(contract);
+    content.appendChild(createBlock(contractContainer));
 
     // disable/enable pay button based on agreement checkbox
     const payBtn = contract.querySelector('#pay-button');
@@ -254,7 +258,7 @@ content.appendChild(createBlock(contractContainer));
             state.deliveryPrice = parseFloat(e.target.value) || 0;
             totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
             saveCart();
-            // toggle selected class on labels
+
             optionsContainer.querySelectorAll('label').forEach(label => {
                 const input = label.querySelector('input[name="delivery"]');
                 if (input && input.checked) {
@@ -275,16 +279,6 @@ content.appendChild(createBlock(contractContainer));
         }
         totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
     }
-
-    // preselect if saved
-    if (state.deliveryPrice) {
-        const inp = deliverySection.querySelector(`input[value="${state.deliveryPrice}"]`);
-        if (inp) {
-            inp.checked = true;
-            inp.closest('label').classList.add('selected');
-        }
-        totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
-    }
 }
 
 function renderAbout() {
@@ -295,19 +289,27 @@ function renderAbout() {
 function switchScreen(screen) {
     state.screen = screen;
     renderBottomNav();
-    // only show filters on catalog screen
+
     const filterContainer = $('#category-filter');
+    const content = $('#content');
+
+    // Очищаем фильтры вне каталога
+    if (screen !== 'catalog' && filterContainer) {
+        filterContainer.innerHTML = '';
+    }
+
+    // Переключаем экраны
     if (screen === 'catalog') {
         renderCategoryFilter();
         renderCatalog();
+    } else if (screen === 'cart') {
+        renderCart();
+    } else if (screen === 'about') {
+        renderAbout();
+    } else if (screen === 'account') {
+        renderAccount();
     } else {
-        // clear filters when leaving catalog
-        if (filterContainer) filterContainer.innerHTML = '';
-        if (screen === 'cart') {
-            renderCart();
-        } else if (screen === 'about') {
-            renderAbout();
-        }
+        content.innerHTML = '<div class="content-block"><p>Экран не найден</p></div>';
     }
 }
 
@@ -331,18 +333,60 @@ on(document, 'click', '#bottom-nav .nav-btn', e => {
         switchScreen(button.dataset.screen);
     }
 });
-
-// Добавляем обработчик клика на логотип для перехода в каталог
 on(document, 'click', '#app-logo', () => {
     switchScreen('catalog');
 });
 
 // initialization
 (() => {
-    // restore cart immediately (localStorage API is synchronous)
     loadCart();
     if (!state.activeCategory) state.activeCategory = 'all';
     switchScreen(state.screen);
-    // keep cart saved when user leaves
     window.addEventListener('beforeunload', saveCart);
 })();
+
+// ✅ renderAccount — теперь СНАРУЖИ и ДОСТУПНА
+function renderAccount() {
+    const content = $('#content');
+    content.innerHTML = ''; // очищаем
+
+    if (!state.user) {
+        content.innerHTML = '<div class="content-block"><p>Не удалось загрузить данные пользователя.</p></div>';
+        return;
+    }
+
+    const { id, first_name, last_name } = state.user;
+
+    const canvas = document.createElement('canvas');
+    canvas.width = 64;
+    canvas.height = 64;
+    const ctx = canvas.getContext('2d');
+
+    const colors = ['#FF6B6B', '#4ECDC4', '#45B7D1', '#96CEB4', '#FFEAA7', '#DDA0DD', '#80CBC4'];
+    const color = colors[id % colors.length];
+
+    ctx.fillStyle = color;
+    ctx.fillRect(0, 0, 64, 64);
+
+    ctx.font = 'bold 32px Arial';
+    ctx.fillStyle = 'white';
+    ctx.textAlign = 'center';
+    ctx.textBaseline = 'middle';
+
+    const firstLetter = first_name[0]?.toUpperCase() || '?';
+    ctx.fillText(firstLetter, 32, 32);
+
+    const avatarUrl = canvas.toDataURL();
+
+    content.innerHTML = `
+        <div class="content-block">
+            <div class="account-header">
+                <img src="${avatarUrl}" alt="User Avatar" class="account-avatar">
+                <div class="account-info">
+                    <div class="account-name">${first_name} ${last_name || ''}</div>
+                    <div class="account-id">ID: ${id}</div>
+                </div>
+            </div>
+        </div>
+    `;
+}
