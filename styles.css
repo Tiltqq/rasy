@@ -1,7 +1,7 @@
 /* design settings block */
 :root {
     /* colors */
-    --color-primary: rgb(18, 18, 175);
+    --color-primary: rgb(175, 18, 18);
     --color-secondary: #E0E0E0;
     --color-notactive: #636363;
     --color-background: #F5F6FA;
@@ -28,7 +28,7 @@
     --header-height: 80px;
     --bottom-nav-height: 56px;
 
-    --page-padding: clamp(6px, 2vw, 12px);      /* для малых экранов */
+    --page-padding: clamp(8px, 3vw, 24px);      /* для малых экранов */
     --max-content-width: 2000px;  /* макс. ширина контента */
 }
 
@@ -276,18 +276,7 @@ body {
 .nav-btn.active .nav-icon,
 .nav-btn:active .nav-icon {
     fill: var(--color-text); /* твой синий цвет */
-}
 
-
-/* cart screen */
-#cart-list,
-#cart-delivery,
-#cart-total,
-#cart-info,
-#cart-contract,
-#cart-contract button {
-    padding-left: 25%;
-    padding-right: 25%;
 }
 
 #cart-list {
