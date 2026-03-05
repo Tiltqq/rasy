@@ -28,8 +28,8 @@
     --header-height: 80px;
     --bottom-nav-height: 56px;
 
-    --page-padding: 16px;        /* для малых экранов */
-    --max-content-width: 600px;  /* макс. ширина контента */
+    --page-padding: clamp(12px, 4vw, 24px);      /* для малых экранов */
+    --max-content-width: 2000px;  /* макс. ширина контента */
 }
 
 /* global resets and layout */

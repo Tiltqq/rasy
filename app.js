@@ -47,6 +47,14 @@ function on(parent, event, selector, handler) {
     });
 }
 
+// Универсальная обёртка для блоков с адаптивными отступами
+function createBlock(element) {
+    const block = document.createElement('div');
+    block.classList.add('content-block');
+    block.appendChild(element);
+    return block;
+}
+
 // calculate cart total including delivery
 function calculateTotal() {
     const itemsTotal = state.cart.reduce((sum, item) => {
@@ -178,7 +186,7 @@ function renderCart() {
         list.appendChild(div);
     });
 
-    content.appendChild(list);
+    content.appendChild(createBlock(list));
 
     // info message (at the top when cart is empty)
     const info = document.createElement('div');
@@ -206,7 +214,7 @@ function renderCart() {
             <label><input type="radio" name="delivery" value="300"><span class="delivery-region">Другие регионы</span><br><span class="delivery-price">300 ₽</span></label>
         </div>
     `;
-    content.appendChild(deliverySection);
+    content.appendChild(createBlock(deliverySection));
 
     // total display
     const totalDiv = document.createElement('div');
@@ -214,7 +222,7 @@ function renderCart() {
     totalDiv.style.margin = 'var(--space-md) 0';
     totalDiv.style.fontWeight = 'bold';
     totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
-    content.appendChild(totalDiv);
+    content.appendChild(createBlock(totalDiv));
     
     // === Блок "Договор" с правильными отступами ===
 const contractContainer = document.createElement('div');
@@ -231,7 +239,7 @@ contract.innerHTML = `
     </button>
 `;
 contractContainer.appendChild(contract);
-content.appendChild(contractContainer);
+content.appendChild(createBlock(contractContainer));
 
     // disable/enable pay button based on agreement checkbox
     const payBtn = contract.querySelector('#pay-button');
