@@ -122,9 +122,9 @@ body {
 /* catalog grid */
 #catalog {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: var(--space-md);
-    padding: var(--space-md);
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: var(--space-sm);
+    padding: var(--space-sm);
 }
 .card {
     background: white;
@@ -132,6 +132,8 @@ body {
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    min-width: 140px;
+    height: auto;
 }
 .card img {
     width: 100%;
