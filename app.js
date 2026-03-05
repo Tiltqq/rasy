@@ -1,26 +1,3 @@
-// Telegram WebApp initialization
-const tg = window.Telegram ? window.Telegram.WebApp : null;
-if (tg) {
-    tg.expand();
-    tg.MainButton.hide();
-
-    // Получаем пользователя из Telegram
-    const user = tg.initDataUnsafe.user;
-    if (user) {
-        state.user = user; // сохраняем в состояние
-    }
-
-    // apply theme parameters to css variables if available
-    const params = tg.themeParams;
-    if (params) {
-        const root = document.documentElement;
-        if (params.bg_color) root.style.setProperty('--color-background', params.bg_color);
-        if (params.text_color) root.style.setProperty('--color-text', params.text_color);
-        if (params.button_color) root.style.setProperty('--color-primary', params.button_color);
-        if (params.button_text_color) root.style.setProperty('--color-text', params.button_text_color);
-    }
-}
-
 // data structures
 const categories = [
     { id: 'all', name: 'Все' },
@@ -38,12 +15,37 @@ const products = [
     { id: 6, title: 'Товар 6', categories: ['all','documents'], price: '600', img: 'https://via.placeholder.com/400x300?text=Товар+6', desc: 'Описание товара 6' },
 ];
 
+// состояние приложения
 let state = {
     screen: 'catalog', // catalog, cart, about, account
     activeCategory: null,
     cart: [],
-    user: null, // ← будем хранить данные пользователя из Telegram
+    user: null, // ← будет заполнено позже
 };
+
+// === TELEGRAM WEBAPP INITIALIZATION ===
+const tg = window.Telegram ? window.Telegram.WebApp : null;
+if (tg) {
+    tg.expand();
+    tg.MainButton.hide();
+
+    // Получаем пользователя из Telegram
+    const user = tg.initDataUnsafe.user;
+    if (user) {
+        state.user = user; // ✅ Теперь state уже объявлен!
+        console.log('Пользователь из Telegram:', user);
+    }
+
+    // apply theme parameters to css variables if available
+    const params = tg.themeParams;
+    if (params) {
+        const root = document.documentElement;
+        if (params.bg_color) root.style.setProperty('--color-background', params.bg_color);
+        if (params.text_color) root.style.setProperty('--color-text', params.text_color);
+        if (params.button_color) root.style.setProperty('--color-primary', params.button_color);
+        if (params.button_text_color) root.style.setProperty('--color-text', params.button_text_color);
+    }
+}
 
 // helpers
 function $(selector) {
