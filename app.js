@@ -227,7 +227,7 @@ function renderCart() {
     // === Блок "Договор" с правильными отступами ===
 const contractContainer = document.createElement('div');
 contractContainer.id = 'cart-contract';
-contractContainer.style.padding = '0 25%'; // ← одинаковые отступы
+
 
 const contract = document.createElement('div');
 contract.innerHTML = `
