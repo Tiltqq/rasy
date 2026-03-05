@@ -15,12 +15,12 @@ const products = [
     { id: 6, title: 'Товар 6', categories: ['all','documents'], price: '600', img: 'https://via.placeholder.com/400x300?text=Товар+6', desc: 'Описание товара 6' },
 ];
 
-// состояние приложения
+// состояние приложения — объявлено ДО Telegram
 let state = {
-    screen: 'catalog', // catalog, cart, about, account
+    screen: 'catalog',
     activeCategory: null,
     cart: [],
-    user: null, // ← будет заполнено позже
+    user: null,
 };
 
 // === TELEGRAM WEBAPP INITIALIZATION ===
@@ -32,11 +32,11 @@ if (tg) {
     // Получаем пользователя из Telegram
     const user = tg.initDataUnsafe.user;
     if (user) {
-        state.user = user; // ✅ Теперь state уже объявлен!
-        console.log('Пользователь из Telegram:', user);
+        state.user = user; // ✅ Теперь state уже существует!
+        console.log('✅ Пользователь из Telegram:', user);
     }
 
-    // apply theme parameters to css variables if available
+    // Применяем тему
     const params = tg.themeParams;
     if (params) {
         const root = document.documentElement;
@@ -58,7 +58,7 @@ function on(parent, event, selector, handler) {
     });
 }
 
-// Универсальная обёртка для блоков с адаптивными отступами
+// Универсальная обёртка
 function createBlock(element) {
     const block = document.createElement('div');
     block.classList.add('content-block');
@@ -76,7 +76,7 @@ function calculateTotal() {
     return itemsTotal + delivery;
 }
 
-// --- cart persistence helpers (localStorage) ---
+// --- cart persistence helpers ---
 function loadCart() {
     try {
         const raw = localStorage.getItem('cart');
@@ -197,7 +197,6 @@ function renderCart() {
 
     content.appendChild(createBlock(list));
 
-    // info message (at the top when cart is empty)
     const info = document.createElement('div');
     info.id = 'cart-info';
     info.style.textAlign = 'center';
@@ -210,7 +209,6 @@ function renderCart() {
         content.appendChild(info);
     }
 
-    // delivery options
     const deliverySection = document.createElement('div');
     deliverySection.id = 'cart-delivery';
     deliverySection.innerHTML = `
@@ -223,14 +221,12 @@ function renderCart() {
     `;
     content.appendChild(createBlock(deliverySection));
 
-    // total display
     const totalDiv = document.createElement('div');
     totalDiv.id = 'cart-total';
     totalDiv.style.fontWeight = 'bold';
     totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
     content.appendChild(createBlock(totalDiv));
 
-    // === Блок "Договор" ===
     const contractContainer = document.createElement('div');
     contractContainer.id = 'cart-contract';
 
@@ -246,14 +242,12 @@ function renderCart() {
     contractContainer.appendChild(contract);
     content.appendChild(createBlock(contractContainer));
 
-    // disable/enable pay button based on agreement checkbox
     const payBtn = contract.querySelector('#pay-button');
     const agreeCheckbox = contract.querySelector('#agree');
     agreeCheckbox.addEventListener('change', () => {
         payBtn.disabled = !agreeCheckbox.checked;
     });
 
-    // delivery change handling
     const optionsContainer = deliverySection.querySelector('#delivery-options');
     optionsContainer.addEventListener('change', e => {
         if (e.target.name === 'delivery') {
@@ -272,7 +266,6 @@ function renderCart() {
         }
     });
 
-    // preselect if saved
     if (state.deliveryPrice) {
         const inp = optionsContainer.querySelector(`input[value="${state.deliveryPrice}"]`);
         if (inp) {
@@ -295,12 +288,10 @@ function switchScreen(screen) {
     const filterContainer = $('#category-filter');
     const content = $('#content');
 
-    // Очищаем фильтры вне каталога
     if (screen !== 'catalog' && filterContainer) {
         filterContainer.innerHTML = '';
     }
 
-    // Переключаем экраны
     if (screen === 'catalog') {
         renderCategoryFilter();
         renderCatalog();
@@ -347,7 +338,7 @@ on(document, 'click', '#app-logo', () => {
     window.addEventListener('beforeunload', saveCart);
 })();
 
-// ✅ renderAccount — теперь СНАРУЖИ и ДОСТУПНА
+// ✅ renderAccount — СНАРУЖИ и ДОСТУПНА
 function renderAccount() {
     const content = $('#content');
     content.innerHTML = ''; // очищаем
