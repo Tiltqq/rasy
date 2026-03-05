@@ -219,7 +219,6 @@ function renderCart() {
     // total display
     const totalDiv = document.createElement('div');
     totalDiv.id = 'cart-total';
-    totalDiv.style.margin = 'var(--space-md) 0';
     totalDiv.style.fontWeight = 'bold';
     totalDiv.textContent = `Итого: ${calculateTotal()} ₽`;
     content.appendChild(createBlock(totalDiv));

@@ -13,7 +13,8 @@ Date:   Mon Mar 2 22:53:57 2026 +0300
      padding: var(--space-md);[m
      overflow-x: auto;[m
 [31m-    background: white;[m
-[32m+[m[32m    background: rgb(255, 0, 0);[m[41m[m
+[32m+[m[32m    background: rgb(255, 0, 0);[m[41m
+[m
      position: sticky;[m
      top: var(--margin-top);[m
      z-index: 800;[m
