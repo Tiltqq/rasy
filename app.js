@@ -326,7 +326,15 @@ on(document, 'click', '#modal button#add-to-cart', e => {
     }
 });
 on(document, 'click', '#bottom-nav .nav-btn', e => {
-    switchScreen(e.target.dataset.screen);
+    const button = e.target.closest('.nav-btn');
+    if (button && button.dataset.screen) {
+        switchScreen(button.dataset.screen);
+    }
+});
+
+// Добавляем обработчик клика на логотип для перехода в каталог
+on(document, 'click', '#app-logo', () => {
+    switchScreen('catalog');
 });
 
 // initialization
